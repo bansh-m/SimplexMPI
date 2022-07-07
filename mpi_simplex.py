@@ -1,4 +1,6 @@
 ﻿import heapq
+from msilib.sequence import tables
+from time import time
 import numpy as np
 from mpi4py import MPI 
 
@@ -121,28 +123,36 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 PROCS = comm.Get_size()
 
+#кількість ітерацій для тестування:
+ITERS = 10
 #потрібно ввести розмірність матриці так, щоб ROWS == COLUMNS
-ROWS, COLUMNS = 80, 80 
+ROWS, COLUMNS = 40, 40 
 ROWSINPROC = np.int32(ROWS/PROCS)
 
-def mpi():
-   canimp, recvbuf, pivot = mpi_simplex(True)
-   if rank == 0:
-      startwtime = MPI.Wtime()
-      iterations = 1
-   while canimp:
-      canimp, recvbuf, pivot = mpi_simplex(False, recvbuf, pivot)
+def mpi(num):
+   totaltime_ = 0
+   for i in range(num):
+      canimp, recvbuf, pivot = mpi_simplex(True)
       if rank == 0:
-         iterations += 1
+         startwtime = MPI.Wtime()
+         iterations = 1
+      while canimp:
+         canimp, recvbuf, pivot = mpi_simplex(False, recvbuf, pivot)
+         if rank == 0:
+            iterations += 1
+      if rank == 0:
+         endwtime = MPI.Wtime()
+         totaltime = round((endwtime - startwtime), 3)
+         timeperiter = totaltime*1000/iterations
+         totaltime_ += totaltime
+         print('Number of iterations:',iterations)
+         print ('Time spent:',totaltime)
+         print('Time per iteration:',timeperiter)
+      i += 1
    if rank == 0:
-      endwtime = MPI.Wtime()
-      totaltime = round((endwtime - startwtime), 3)
-      print('Number of iterations:',iterations)
-      print ('Time spent:',totaltime)
-      timeperiter = totaltime*1000/iterations
-      print('Time per iteration:',timeperiter)
-
-mpi()
+      print('Average time spent:', (totaltime_*1000)/num, 'ms')
+      
+mpi(ITERS)
 #Аби запустити скрипт з використанням декількох процесорів необхідно ввести наступну команду у термінал,
 #знаходячись в директорії зі скриптом: 
 #mpiexec -n *кількість процесорів* python mpi_simplex.py
