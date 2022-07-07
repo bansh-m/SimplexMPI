@@ -56,20 +56,18 @@ def tableau_gen(r, c):
 
 def seq_simplex(r, c):
    tableau = tableau_gen(r, c)
-   # print("Tableau size - {}x{}".format(r, c))
-   # print('Given tableau:\n',tableau)
+   print("Tableau size - {}x{}".format(r, c))
+   print('Given tableau:\n',tableau)
    iterations = 0
    while canImprove(tableau):
       pivot = findPivotIndex(tableau)
       pivotAbout(tableau, pivot)
       iterations = iterations + 1
-   # print('Final tableau:\n', tableau)
-   # print('Objective value:', round(objectiveValue(tableau), 2))
-   # print('Number of iterations:', iterations)
+   print('Final tableau:\n', tableau)
+   print('Objective value:', round(objectiveValue(tableau), 2))
+   print('Number of iterations:', iterations)
    return iterations
    
-ROWS = 150
-COLUMNS = 150
 
 timer = Timer()
 
@@ -85,5 +83,10 @@ def test(num):
       i += 1
    print('Average time spent:', totalTime/num)
    print('Average iterations number:', totalIters/num)
+   print('Average time per iteration:', (totalTime/totalIters)*1000)
 
-test(100)
+
+ROWS = 120
+COLUMNS = 120
+seq_simplex(ROWS, COLUMNS)
+test(10)

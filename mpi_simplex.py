@@ -2,6 +2,7 @@
 import numpy as np
 from mpi4py import MPI 
 
+
 def objectiveValue(tableau):
    if tableau is not None:
       return -(tableau[-1][-1])
@@ -71,8 +72,8 @@ def mpi_simplex(firstIter, recvbuf = None, pivot = None):
    tableau_ = None
    pivot_ = None
    row = None
-   recvbuf_ = np.empty((ROWSINPROC, COLUMNS*2))
    canImprove_ = None
+   recvbuf_ = np.empty((ROWSINPROC, COLUMNS*2))
 
    if rank == 0:
       if firstIter:
@@ -120,11 +121,8 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 PROCS = comm.Get_size()
 
-ROWS, COLUMNS = 40, 40
+ROWS, COLUMNS = 80, 80
 ROWSINPROC = np.int32(ROWS/PROCS)
-
-startwtime = 0
-endwtime = 0
 
 def mpi():
    canimp, recvbuf, pivot = mpi_simplex(True)
@@ -137,9 +135,11 @@ def mpi():
          iterations += 1
    if rank == 0:
       endwtime = MPI.Wtime()
+      totaltime = round((endwtime - startwtime), 3)
       print('Number of iterations:',iterations)
-      print ("%.5f" %(endwtime - startwtime))
+      print ('Time spent:',totaltime)
+      timeperiter = totaltime*1000/iterations
+      print('Time per iteration:',timeperiter)
 
 mpi()
-
 
