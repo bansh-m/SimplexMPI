@@ -86,7 +86,7 @@ def test(num):
    print('Average time per iteration:', (totalTime/totalIters)*1000)
 
 
-ROWS = 120
-COLUMNS = 120
+ROWS = 3
+COLUMNS = 3
 seq_simplex(ROWS, COLUMNS)
-test(10)
+# test(10)
