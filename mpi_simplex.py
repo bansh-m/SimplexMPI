@@ -121,7 +121,8 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 PROCS = comm.Get_size()
 
-ROWS, COLUMNS = 80, 80
+#потрібно ввести розмірність матриці так, щоб ROWS == COLUMNS
+ROWS, COLUMNS = 80, 80 
 ROWSINPROC = np.int32(ROWS/PROCS)
 
 def mpi():
@@ -142,4 +143,6 @@ def mpi():
       print('Time per iteration:',timeperiter)
 
 mpi()
-
+#Аби запустити скрипт з використанням декількох процесорів необхідно ввести наступну команду у термінал,
+#знаходячись в директорії зі скриптом: 
+#mpiexec -n *кількість процесорів* python mpi_simplex.py

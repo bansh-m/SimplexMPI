@@ -85,8 +85,7 @@ def test(num):
    print('Average iterations number:', totalIters/num)
    print('Average time per iteration:', (totalTime/totalIters)*1000)
 
-
-ROWS = 3
-COLUMNS = 3
+#Потрібно ввести розмірність матриці так, щоб ROWS == COLUMNS
+ROWS, COLUMNS = 3, 3
 seq_simplex(ROWS, COLUMNS)
 # test(10)
